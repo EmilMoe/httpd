@@ -12,7 +12,7 @@ RUN LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
 RUN LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/apache2
 RUN apt-get -qq update
 
-RUN apt-get -qq -y install apache2 php7.2 curl php7.2-cli php7.2-mysql php7.2-curl git gnupg php7.2-mbstring php7.2-xml unzip sudo curl php7.2-zip
+RUN apt-get -qq -y install apache2 php7.2 curl php7.2-cli php7.2-mysql php7.2-curl git gnupg php7.2-mbstring php7.2-xml unzip sudo curl php7.2-zip cron
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
 RUN apt-get -qq -y install nodejs 
 RUN apt-get -qq -y install libtool automake autoconf nasm libpng-dev make g++
@@ -34,6 +34,8 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" &&
     php composer-setup.php && \
     php -r "unlink('composer-setup.php');" && \
     mv composer.phar /usr/local/bin/composer
+    
+RUN crontab -l > mycron && echo "* * * * * php /var/www/html/artisan schedule:run >> /dev/null 2>&1" >> mycron && crontab mycron && rm mycron
 
 VOLUME ["/var/www/html"]
 
