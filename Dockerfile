@@ -35,7 +35,7 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" &&
     php -r "unlink('composer-setup.php');" && \
     mv composer.phar /usr/local/bin/composer
     
-RUN crontab -l > mycron && echo "* * * * * php /var/www/html/artisan schedule:run >> /dev/null 2>&1" >> mycron && crontab mycron && rm mycron
+RUN (crontab -l 2>/dev/null; echo "* * * * * php /var/www/html/artisan schedule:run") | crontab -
 
 VOLUME ["/var/www/html"]
 
