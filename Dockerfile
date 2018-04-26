@@ -43,6 +43,4 @@ WORKDIR /var/www/html
 
 EXPOSE 80 9515 8080
 
-CMD ["nodemon", "/var/www/html"]
-
 ENTRYPOINT sudo /usr/sbin/apache2ctl -D FOREGROUND 
