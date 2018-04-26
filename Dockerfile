@@ -41,6 +41,6 @@ VOLUME ["/var/www/html"]
 
 WORKDIR /var/www/html
 
-EXPOSE 80 9515 8080
+EXPOSE 80 9515 3000
 
 ENTRYPOINT sudo /usr/sbin/apache2ctl -D FOREGROUND 
