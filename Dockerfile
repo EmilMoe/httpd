@@ -7,7 +7,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 WORKDIR /tmp
 
 RUN apt-get -qq update && apt-get -qq -y upgrade
-RUN apt-get install -qq -y software-properties-common python-software-properties
+RUN apt-get install -qq -y software-properties-common
 RUN LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
 RUN LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/apache2
 RUN apt-get -qq update
