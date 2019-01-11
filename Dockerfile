@@ -8,6 +8,8 @@ WORKDIR /tmp
 
 RUN apt-get update
 RUN apt-get -y upgrade
+
+# INSTALL APACHE + PHP
 RUN apt-get install -qq -y software-properties-common
 RUN LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
 RUN LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/apache2
@@ -40,8 +42,23 @@ RUN (crontab -l 2>/dev/null; echo "* * * * * php /var/www/html/artisan schedule:
 
 VOLUME ["/var/www/html"]
 
+# INSTALL MARIADB
+RUN echo mariadb-server mysql-server/root_password password secret | debconf-set-selections
+RUN echo mariadb-server mysql-server/root_password_again password secret | debconf-set-selections
+
+RUN apt-get install -y mariadb-server mariadb-client bash sudo
+
+RUN sed -i -e 's/bind-address/# bind-address/g' /etc/mysql/mariadb.conf.d/50-server.cnf
+RUN /etc/init.d/mysql start && mysql -u root -psecret -e "GRANT ALL ON *.* TO root@'%' IDENTIFIED BY 'secret' WITH GRANT OPTION;"
+
+RUN echo "" > /empty.log
+
+COPY ./db.setup.docker /cmd.sh
+RUN chmod +x /cmd.sh
+
+# PREPARING FOR LAUNCH
 WORKDIR /var/www/html
 
-EXPOSE 80 9515 3000
+EXPOSE 80 9515 3000 3306
 
 ENTRYPOINT sudo /usr/sbin/apache2ctl -D FOREGROUND 
