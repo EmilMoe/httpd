@@ -40,8 +40,8 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" &&
     
 RUN (crontab -l 2>/dev/null; echo "* * * * * php /var/www/html/artisan schedule:run") | crontab -
 
-RUN cd /etc/ssl/certs
-RUN wget http://curl.haxx.se/ca/cacert.pem
+RUN curl https://raw.github.com/timkay/aws/master/aws -o aws --cacert /etc/ssl/certs/ca-certificates.crt
+RUN update-ca-certificates
 
 VOLUME ["/var/www/html"]
 
