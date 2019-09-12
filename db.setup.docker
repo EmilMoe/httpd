@@ -1,3 +1,0 @@
-#!/bin/bash
-
-/etc/init.d/mysql start && mysql -u root -psecret -e "CREATE DATABASE IF NOT EXISTS ${DATABASE} COLLATE = 'utf8mb4_general_ci' CHARACTER SET = 'utf8mb4'"
