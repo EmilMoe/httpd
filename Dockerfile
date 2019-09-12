@@ -37,26 +37,11 @@ RUN (crontab -l 2>/dev/null; echo "* * * * * php /var/www/html/artisan schedule:
 RUN curl https://raw.github.com/timkay/aws/master/aws -o aws --cacert /etc/ssl/certs/ca-certificates.crt
 RUN update-ca-certificates
 
-# INSTALL MARIADB
-
-RUN echo mariadb-server mysql-server/root_password password secret | debconf-set-selections
-RUN echo mariadb-server mysql-server/root_password_again password secret | debconf-set-selections
-
-RUN apt-get install -y mariadb-server mariadb-client
-
-RUN sed -i -e 's/bind-address/# bind-address/g' /etc/mysql/mariadb.conf.d/50-server.cnf
-RUN /etc/init.d/mysql start && mysql -u root -psecret -e "GRANT ALL ON *.* TO root@'%' IDENTIFIED BY 'secret' WITH GRANT OPTION;"
-
-RUN echo "" > /empty.log
-
-COPY ./db.setup.docker /cmd.sh
-RUN chmod +x /cmd.sh
-
 VOLUME ["/var/www/html"]
 
 # PREPARING FOR LAUNCH
 WORKDIR /var/www/html
 
-EXPOSE 80 9515 3000 3306
+EXPOSE 80
 
 ENTRYPOINT sudo /usr/sbin/apache2ctl -D FOREGROUND 
