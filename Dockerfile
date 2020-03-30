@@ -25,7 +25,14 @@ RUN a2enmod rewrite
 RUN mkdir -p /var/www/html
 RUN rm /var/www/html/*
 RUN chown www-data:www-data /var/www/html
+
+# SETUP LARAVEL
 RUN git clone https://${GIT_USER}:${GIT_TOKEN}@${GIT_REPO} -b ${GIT_BRANCH} /var/www/html
+RUN cd /var/www/html
+RUN composer install --no-dev
+RUN php artisan key:generate
+RUN php artisan migrate --force
+RUN php artisan db:seed --force
 
 # CONFIG FILES
 COPY ./vhost.conf /etc/apache2/sites-enabled/${DOMAIN}.conf
