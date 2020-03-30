@@ -34,9 +34,6 @@ RUN certbot --apache --quiet --redirect --domain ${DOMAIN}
 # SCHEDULES
 RUN (crontab -u www-data -l 2>/dev/null; echo "* * * * * php /var/www/html/artisan schedule:run") | crontab -
 
-# RUN curl https://raw.github.com/timkay/aws/master/aws -o aws --cacert /etc/ssl/certs/ca-certificates.crt
-# RUN update-ca-certificates
-
 # WORKDIR
 VOLUME ["/var/www/html"]
 
