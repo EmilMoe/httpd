@@ -25,11 +25,11 @@ RUN a2enmod rewrite
 RUN mkdir -p /var/www/html
 RUN rm /var/www/html/*
 RUN chown www-data:www-data /var/www/html
-RUN git clone ${GIT_REPO} -b ${GIT_BRANCH} /var/www/html
+RUN git clone https://${GIT_USER}:${GIT_TOKEN}@${GIT_REPO} -b ${GIT_BRANCH} /var/www/html
 
 # CONFIG FILES
 COPY ./vhost.conf /etc/apache2/sites-enabled/${DOMAIN}.conf
-RUN certbot --apache
+RUN certbot --apache --quiet --redirect --domain ${DOMAIN}
 
 # SCHEDULES
 RUN (crontab -u www-data -l 2>/dev/null; echo "* * * * * php /var/www/html/artisan schedule:run") | crontab -
