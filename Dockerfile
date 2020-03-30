@@ -2,46 +2,46 @@ FROM amd64/ubuntu:latest
 
 MAINTAINER Emil Moe
 
-ARG DEBIAN_FRONTEND=noninteractive
+# ADD SOURCES
+RUN add-apt-repository universe
+RUN add-apt-repository ppa:certbot/certbot
 
-WORKDIR /tmp
-
+# MAKE SURE EVERYTHING IS UP TO DATE
 RUN apt-get update
-RUN apt-get -y upgrade
+RUN apt-get upgrade -yqq
 
-# INSTALL APACHE + PHP
-RUN apt-get install -qq -y software-properties-common
-RUN LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
-RUN LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/apache2
-RUN apt-get -qq update
-
-RUN apt-get -qq -y install bash wget apache2 php7.2 curl php7.2-cli php7.2-mysql php7.2-curl git gnupg php7.2-mbstring php7.2-xml unzip sudo curl php7.2-zip cron php7.2-bcmath php-imagick composer
+# INSTALL DEPENDENCIES
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
-RUN apt-get -qq -y install nodejs 
-RUN apt-get -qq -y install libtool automake autoconf nasm libpng-dev make g++
+RUN apt-get install nodejs apache2 php7.2 php7.2-mysql \
+    php7.2-bcmath php7.2-bz2 php7.2-mbstring php7.2-zip \
+    php7.2-common php7.2-xml php7.2-cli php7.2-curl git \
+    unzip curl php-imagick composer software-properties-common \
+    certbot python-certbot-apache -yqq
 
-RUN adduser local --disabled-password
-
-RUN echo "local ALL = NOPASSWD: ALL" >> /etc/sudoers
-
+# ENABLE APACHE MODS
 RUN a2enmod rewrite
 
+# FOLDER PERMISSIONS
 RUN mkdir -p /var/www/html
 RUN rm /var/www/html/index.html
-RUN chown local:www-data /var/www/html
+RUN chown www-data:www-data /var/www/html
 
-COPY ./vhost.conf /etc/apache2/sites-enabled/001-docker.conf
+# CONFIG FILES
+COPY ./vhost.conf /etc/apache2/sites-enabled/001-site.conf
+RUN certbot --apache
 
+# SCHEDULES
 RUN (crontab -l 2>/dev/null; echo "* * * * * php /var/www/html/artisan schedule:run") | crontab -
 
-RUN curl https://raw.github.com/timkay/aws/master/aws -o aws --cacert /etc/ssl/certs/ca-certificates.crt
-RUN update-ca-certificates
+# RUN curl https://raw.github.com/timkay/aws/master/aws -o aws --cacert /etc/ssl/certs/ca-certificates.crt
+# RUN update-ca-certificates
 
+# WORKDIR
 VOLUME ["/var/www/html"]
 
 # PREPARING FOR LAUNCH
 WORKDIR /var/www/html
 
-EXPOSE 80
+EXPOSE 80 443
 
 ENTRYPOINT sudo /usr/sbin/apache2ctl -D FOREGROUND 
