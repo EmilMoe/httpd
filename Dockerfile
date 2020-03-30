@@ -28,7 +28,7 @@ RUN chown www-data:www-data /var/www/html
 RUN git clone ${GIT_REPO} -b ${GIT_BRANCH} /var/www/html
 
 # CONFIG FILES
-COPY ./vhost.conf /etc/apache2/sites-enabled/001-site.conf
+COPY ./vhost.conf /etc/apache2/sites-enabled/${DOMAIN}.conf
 RUN certbot --apache
 
 # SCHEDULES
