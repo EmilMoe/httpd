@@ -12,7 +12,7 @@
 #
 # GIT_USER
 # GIT_TOKEN
-# GIT_REPO (without HTTP)
+# GIT_REPO (without HTTPS)
 # GIT_BRANCH
 
 version: '3.3'
