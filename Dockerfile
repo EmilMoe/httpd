@@ -23,8 +23,9 @@ RUN a2enmod rewrite
 
 # FOLDER PERMISSIONS
 RUN mkdir -p /var/www/html
-RUN rm /var/www/html/index.html
+RUN rm /var/www/html/*
 RUN chown www-data:www-data /var/www/html
+RUN git clone ${GIT_REPO} -b ${GIT_BRANCH} /var/www/html
 
 # CONFIG FILES
 COPY ./vhost.conf /etc/apache2/sites-enabled/001-site.conf
