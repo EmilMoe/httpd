@@ -1,6 +1,5 @@
 version: '3.3'
 services:
-  # The Web Server
   web:
     container_name: ${APP_NAME}
     env_file:
