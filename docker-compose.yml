@@ -10,7 +10,9 @@
 # APP_ENV
 # DOMAIN
 #
-# GIT_REPO
+# GIT_USER
+# GIT_TOKEN
+# GIT_REPO (without HTTP)
 # GIT_BRANCH
 
 version: '3.3'
