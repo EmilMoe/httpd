@@ -1,3 +1,18 @@
+# VARIABLES
+#
+# DB_HOST
+# DB_PORT
+# DB_NAME
+# DB_USER
+# DB_PASSWORD
+#
+# APP_NAME
+# APP_ENV
+# DOMAIN
+#
+# GIT_REPO
+# GIT_BRANCH
+
 version: '3.3'
 services:
   # The Web Server
