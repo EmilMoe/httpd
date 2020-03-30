@@ -1,0 +1,15 @@
+version: '3.3'
+services:
+  # The Web Server
+  web:
+    container_name: ${APP_NAME}
+    env_file:
+      - .env
+    build: 
+      context: https://github.com/EmilMoe/httpd.git
+    volumes:
+      - .:/var/www/html
+    ports:
+      - 80:80
+      - 443:443
+    user: www-data
