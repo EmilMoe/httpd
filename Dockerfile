@@ -31,7 +31,7 @@ COPY ./vhost.conf /etc/apache2/sites-enabled/001-site.conf
 RUN certbot --apache
 
 # SCHEDULES
-RUN (crontab -l 2>/dev/null; echo "* * * * * php /var/www/html/artisan schedule:run") | crontab -
+RUN (crontab -u www-data -l 2>/dev/null; echo "* * * * * php /var/www/html/artisan schedule:run") | crontab -
 
 # RUN curl https://raw.github.com/timkay/aws/master/aws -o aws --cacert /etc/ssl/certs/ca-certificates.crt
 # RUN update-ca-certificates
